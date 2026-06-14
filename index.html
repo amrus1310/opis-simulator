@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="text-xs text-slate-400 font-medium">
-                Vetting Tool: <strong class="text-emerald-400">Arthur's Autocare Transition Modeling</strong>
+                Vetting Tool: <strong class="text-emerald-400">Legacy Autocare Transition Modeling</strong>
             </div>
         </div>
     </header>
@@ -88,7 +88,7 @@
                         <i class="fa-solid fa-sliders text-emerald-400"></i>
                         Venture Input Parameters
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Adjust these sliders to simulate your shop's financials and observe the scenarios recalculate dynamically.</p>
+                    <p class="text-xs text-slate-400 mt-1">Adjust these sliders to simulate Legacy Autocare's financials and observe the scenarios recalculate dynamically.</p>
                 </div>
 
                 <!-- Input: Gross Sales -->
@@ -130,7 +130,7 @@
                             Has Mortgage
                         </button>
                         <button id="btn-mortgage-no" onclick="setMortgageStatus(false)" class="py-2.5 text-xs font-bold rounded-lg transition-all duration-300 text-slate-400 hover:text-white">
-                            Free & Clear
+                            Free & Clear (Debt Free)
                         </button>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                     </div>
                     <input type="range" id="input-profit-share" min="0" max="50" value="25" step="5" oninput="calculateSimulator()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
                     <p class="text-[10px] text-slate-500 leading-normal">
-                        Defines the Operator's percentage payout to Owner's AssetCo out of the daily EBITDA surplus generated above the base rent floor.
+                        Defines the Operator's percentage payout to Heir's AssetCo out of the daily EBITDA surplus generated above the base rent floor.
                     </p>
                 </div>
             </div>
@@ -166,7 +166,7 @@
                 <div class="space-y-3 text-xs">
                     <label class="flex items-start gap-2.5 cursor-pointer">
                         <input type="checkbox" checked disabled class="mt-0.5 w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-850 accent-emerald-500">
-                        <span class="text-slate-300">Owner's son has active Silicon Valley corporate day job (S-Corp bracket high)</span>
+                        <span class="text-slate-300">Owner's Heir has active Silicon Valley corporate day job (S-Corp bracket high)</span>
                     </label>
                     <label class="flex items-start gap-2.5 cursor-pointer">
                         <input type="checkbox" id="check-prop13" checked onchange="calculateSimulator()" class="mt-0.5 w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-850 accent-emerald-500">
@@ -199,22 +199,33 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-850 space-y-1">
-                        <span class="text-[9px] font-mono text-slate-500 uppercase block font-extrabold">Son's Handshake Hours</span>
+                        <span class="text-[9px] font-mono text-slate-500 uppercase block font-extrabold">Heir's Handshake Hours</span>
                         <span class="text-xl font-extrabold text-white">3 Hours <span class="text-xs text-slate-400 font-medium">/ week</span></span>
                         <p class="text-[10px] text-slate-400 leading-tight">Drop your workload from 55 hrs/wk</p>
                     </div>
                     <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-850 space-y-1">
-                        <span class="text-[9px] font-mono text-slate-500 uppercase block font-extrabold">Son's Effective Hourly Wage</span>
+                        <span class="text-[9px] font-mono text-slate-500 uppercase block font-extrabold">Heir's Effective Hourly Wage</span>
                         <span id="label-hybrid-wage" class="text-xl font-extrabold text-emerald-400">$557.24 <span class="text-xs text-emerald-500 font-medium">/ hour</span></span>
                         <p class="text-[10px] text-slate-400 leading-tight">Massive executive-level returns</p>
                     </div>
+                </div>
+
+                <!-- NEW: Mortgage vs. Free & Clear Explainer Callout (OCC Explanation) -->
+                <div id="occ-explainer-card" class="mt-4 p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 text-xs text-slate-300 leading-relaxed space-y-2">
+                    <div class="flex items-center gap-2 text-blue-400 font-bold font-display uppercase tracking-wider">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span id="occ-title">Property Debt Valuation Mechanic</span>
+                    </div>
+                    <p id="occ-text" class="text-slate-400 text-[11px] leading-relaxed">
+                        Explaining the dynamic base rent floor formulation.
+                    </p>
                 </div>
 
                 <!-- Explanatory ROI Note Card -->
                 <div class="mt-4 bg-emerald-500/5 p-4 rounded-xl border border-emerald-500/20 text-xs text-slate-300 leading-relaxed flex items-start gap-2.5">
                     <i class="fa-solid fa-lightbulb text-emerald-400 mt-0.5"></i>
                     <span id="label-leverage-analysis-pitch">
-                        Arthur Jr., by choosing our **Partner-Hybrid Model**, you trade away only **$1,547/year** in physical cash compared to hiring an expensive manager, but you reclaim **1,100 hours of personal life per year** while dropping your workload to 3 hours of high-level board oversight.
+                        Owner's Heir, by choosing our **Partner-Hybrid Model**, you trade away only a small sum compared to hiring an expensive manager, but you reclaim **1,100 hours of personal life per year** while dropping your workload to 3 hours of high-level board oversight.
                     </span>
                 </div>
             </div>
@@ -236,7 +247,7 @@
                                 <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
                                 <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scenario 1: Solo Grind</h4>
                             </div>
-                            <p class="text-[11px] text-slate-400">Son manages 100% of operations on top of high-paying corporate day job.</p>
+                            <p class="text-[11px] text-slate-400">Heir manages 100% of operations on top of high-paying corporate day job.</p>
                         </div>
                         <div class="grid grid-cols-3 gap-4 text-right sm:text-right w-full sm:w-auto border-t sm:border-0 border-slate-900 pt-2 sm:pt-0">
                             <div>
@@ -435,7 +446,6 @@
             }
 
             // Real Estate Carrying Cost Expenses (Taxes + Insurance)
-            // Under CA Prop 13, historical base is typically lower. Standard base is 1.1% reassessed; Prop 13 base is ~0.67% of old purchase.
             const propTaxes = checkProp13 ? 8000 : (propValue * 0.011);
             const structuralInsurance = 4000;
             const totalHoldingCashExpenses = propTaxes + structuralInsurance;
@@ -446,6 +456,17 @@
             const equipmentDepreciation = 5500;
             const totalDepreciationShield = buildingStraightLineDepreciation + equipmentDepreciation;
 
+            // Mortgage vs. OCC Explainer Sync
+            const occTitle = document.getElementById('occ-title');
+            const occText = document.getElementById('occ-text');
+            if (hasMortgage) {
+                occTitle.innerHTML = `<i class="fa-solid fa-credit-card mr-1.5"></i>Mortgage-Linked Safety Base`;
+                occText.innerHTML = `Your base floor is derived at <strong>$${Math.round(mortgagePI + (totalHoldingCashExpenses/12)).toLocaleString()}/mo</strong>, which matches your commercial mortgage interest & principal ($${mortgagePI.toLocaleString()}/mo) plus property tax and structural hazard insurance reserves. This ensures your out-of-pocket carrying risk is mathematically <strong>$0</strong> from Day 1.`;
+            } else {
+                occTitle.innerHTML = `<i class="fa-solid fa-sack-dollar mr-1.5"></i>Opportunity Cost of Equity Base (OCC)`;
+                occText.innerHTML = `Because your building is owned free and clear, a basic tax-only rent of $1,000/mo severely under-utilizes your asset. Instead, we mandate a <strong>$4,000/mo base floor</strong> derived from the <strong>Opportunity Cost of Capital (OCC)</strong>, representing a conservative <strong>4% annualized yield</strong> on your $${propValue.toLocaleString()} property. This protects your cash flow, protects your Prop 13 tax status, and gets paid continuously alongside your <strong>${profitSharePct}% profit share</strong>.`;
+            }
+
             // SCENARIO 1: Solo Grind
             const s1Gross = baseEbitda;
             const s1CaFranchiseFee = s1Gross * 0.015; // CA S-Corp 1.5%
@@ -453,7 +474,6 @@
             const s1IncomeTax = s1TaxableBase * 0.413; // 41.3% blended active day-job marginal rate
             const s1TotalTax = s1CaFranchiseFee + s1IncomeTax;
             const s1NetCash = s1Gross - s1TotalTax;
-            const s1HourlyWage = s1NetCash / 2750;
 
             // SCENARIO 1.5: Private Manager
             const loadedManagerCost = 90000;
@@ -472,24 +492,19 @@
             const s15IncomeTax = s15TaxableBase * 0.413; // High active bracket
             const s15TotalTax = s15LLCFees + s15IncomeTax;
             const s15NetCash = s15Gross - s15TotalTax;
-            const s15HourlyWage = s15NetCash / 1250;
 
             // SCENARIO 2: Pure Passive
-            // Real Estate NNN rental rates are generally structured as 6% of Property Value
             const s2Gross = propValue * 0.06;
             const s2TaxableBase = Math.max(0, s2Gross - totalHoldingCashExpenses - totalDepreciationShield);
-            const s2IncomeTax = s2TaxableBase * 0.30; // 30% blended passive rate (not active SE)
-            const s2TotalTax = s2IncomeTax; // No LLC operational fees under passive real estate holding
+            const s2IncomeTax = s2TaxableBase * 0.30; // 30% blended passive rate
+            const s2TotalTax = s2IncomeTax;
             const s2NetCash = s2Gross - totalHoldingCashExpenses - s2TotalTax;
 
             // SCENARIO 3: Partner Hybrid
-            // Derive base floor dynamically
             let baseFloorMonthly = 0;
             if (hasMortgage) {
-                // Cash-neutral mortgage payment + taxes/insurance
                 baseFloorMonthly = mortgagePI + (totalHoldingCashExpenses / 12);
             } else {
-                // Opportunity Cost of Equity (4% of real estate value annually) + taxes/insurance
                 baseFloorMonthly = ((propValue * 0.04) / 12) + (totalHoldingCashExpenses / 12);
             }
             const s3BaseFloorAnnual = baseFloorMonthly * 12;
@@ -500,7 +515,6 @@
             const s3GrossPayout = s3BaseFloorAnnual + s3SonProfitShareAnnual;
 
             // Tax shielding of Hybrid Structure
-            // Base floor is covered under AssetCo depreciation shield. Profit share is passive K-1 distribution (30% rate)
             const s3RentFloorTaxableBase = Math.max(0, s3BaseFloorAnnual - totalHoldingCashExpenses - totalDepreciationShield);
             const s3RentFloorTax = s3RentFloorTaxableBase * 0.30;
             const s3ProfitShareTax = s3SonProfitShareAnnual * 0.30;
@@ -527,9 +541,8 @@
 
             // Sync Explanatory ROI Note Card
             const cashDifference = s15NetCash - s3NetCash;
-            const reclaimHoursStr = "1,100 hours";
             document.getElementById('label-leverage-analysis-pitch').innerHTML = `
-                Arthur Jr., by choosing our **Partner-Hybrid Model ($${Math.round(s3NetCash/1000)}k take-home)**, you trade away only **$${Math.round(Math.abs(cashDifference)).toLocaleString()}/year** in physical cash compared to hiring an expensive manager privately ($${Math.round(s15NetCash/1000)}k take-home), but you reclaim **1,100 hours of personal life per year** while dropping your workload from 25 hours to only 3 hours. Your effective advisory rate is a massive **$${s3HourlyWage.toFixed(2)}/hour**!
+                Owner's Heir, by choosing our **Partner-Hybrid Model ($${Math.round(s3NetCash/1000)}k take-home)**, you trade away only **$${Math.round(Math.abs(cashDifference)).toLocaleString()}/year** in physical cash compared to hiring an expensive manager privately ($${Math.round(s15NetCash/1000)}k take-home), but you reclaim **1,100 hours of personal life per year** while dropping your workload from 25 hours to only 3 hours. Your effective advisory rate is a massive **$${s3HourlyWage.toFixed(2)}/hour**!
             `;
         }
 
