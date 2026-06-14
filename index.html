@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpisMarket.ai: Dynamic Succession & Return Simulator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            900: '#0f172a',
+                            950: '#020617',
+                            800: '#1e293b',
+                            700: '#334155',
+                            600: '#475569'
+                        },
+                        emerald: {
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            950: '#022c22'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Lato', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-emerald-500/30 selection:text-emerald-400 custom-scrollbar overflow-x-hidden">
+
+    <!-- Global Header -->
+    <header class="border-b border-slate-900 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-chart-pie text-slate-950 text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-xl tracking-tight text-white">OpisMarket<span class="text-emerald-400">.ai</span></span>
+                    <span class="text-[10px] text-slate-400 ml-2 font-bold px-2 py-0.5 rounded-full bg-slate-800 uppercase tracking-wider">Succession Simulator</span>
+                </div>
+            </div>
+            <div class="text-xs text-slate-400 font-medium">
+                Vetting Tool: <strong class="text-emerald-400">Arthur's Autocare Transition Modeling</strong>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- LEFT PANEL: CONTROLS & INPUT VARIABLES (5 Columns) -->
+        <div class="lg:col-span-5 space-y-6">
+            <div class="bg-slate-900/50 border border-slate-900 rounded-3xl p-6 space-y-6 shadow-xl">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-lg font-bold text-white font-display flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-emerald-400"></i>
+                        Venture Input Parameters
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Adjust these sliders to simulate your shop's financials and observe the scenarios recalculate dynamically.</p>
+                </div>
+
+                <!-- Input: Gross Sales -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">ANNUAL GROSS SALES (R)</span>
+                        <span id="label-gross-sales" class="text-emerald-400 font-extrabold">$1,500,000</span>
+                    </div>
+                    <input type="range" id="input-gross-sales" min="500000" max="3000000" value="1500000" step="50000" oninput="calculateSimulator()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+
+                <!-- Input: EBITDA Percentage -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">OPERATING EBITDA MARGIN</span>
+                        <span id="label-ebitda-pct" class="text-emerald-400 font-extrabold">15%</span>
+                    </div>
+                    <input type="range" id="input-ebitda-pct" min="5" max="30" value="15" step="1" oninput="calculateSimulator()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                        <span>Calculated EBITDA Value:</span>
+                        <span id="label-ebitda-val" class="font-bold text-white">$225,000</span>
+                    </div>
+                </div>
+
+                <!-- Input: Property Value -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">REAL ESTATE PROPERTY VALUE</span>
+                        <span id="label-prop-value" class="text-emerald-400 font-extrabold">$1,200,000</span>
+                    </div>
+                    <input type="range" id="input-prop-value" min="500000" max="3000000" value="1200000" step="50000" oninput="calculateSimulator()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+
+                <!-- Toggle: Mortgage Status -->
+                <div class="space-y-3 pt-2">
+                    <span class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest block">Real Estate Debt Profile</span>
+                    <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800">
+                        <button id="btn-mortgage-yes" onclick="setMortgageStatus(true)" class="py-2.5 text-xs font-bold rounded-lg transition-all duration-300 bg-emerald-500 text-slate-950 shadow-md">
+                            Has Mortgage
+                        </button>
+                        <button id="btn-mortgage-no" onclick="setMortgageStatus(false)" class="py-2.5 text-xs font-bold rounded-lg transition-all duration-300 text-slate-400 hover:text-white">
+                            Free & Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Conditional Input: Mortgage Payment (Only visible when has mortgage is active) -->
+                <div id="mortgage-payment-box" class="space-y-2 transition duration-300">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300">MONTHLY MORTGAGE (P&I)</span>
+                        <span id="label-mortgage-payment" class="text-emerald-400 font-extrabold">$3,000/mo</span>
+                    </div>
+                    <input type="range" id="input-mortgage-payment" min="1000" max="10000" value="3000" step="100" oninput="calculateSimulator()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+
+                <!-- Input: Partner Hybrid Profit Share % -->
+                <div class="space-y-2 pt-2 border-t border-slate-800">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-300 font-bold text-white"><i class="fa-solid fa-arrows-split-up-and-left text-emerald-400 mr-1.5"></i>HYBRID PROFIT SHARING %</span>
+                        <span id="label-profit-share" class="text-emerald-400 font-extrabold">25%</span>
+                    </div>
+                    <input type="range" id="input-profit-share" min="0" max="50" value="25" step="5" oninput="calculateSimulator()" class="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <p class="text-[10px] text-slate-500 leading-normal">
+                        Defines the Operator's percentage payout to Owner's AssetCo out of the daily EBITDA surplus generated above the base rent floor.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dynamic Vetting Checklist Box -->
+            <div class="bg-slate-900/50 border border-slate-900 rounded-3xl p-6 space-y-4 shadow-xl">
+                <h3 class="text-sm font-bold text-white font-display flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-question text-emerald-400"></i>
+                    Diagnostic Qualification Check
+                </h3>
+                <div class="space-y-3 text-xs">
+                    <label class="flex items-start gap-2.5 cursor-pointer">
+                        <input type="checkbox" checked disabled class="mt-0.5 w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-850 accent-emerald-500">
+                        <span class="text-slate-300">Owner's son has active Silicon Valley corporate day job (S-Corp bracket high)</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 cursor-pointer">
+                        <input type="checkbox" id="check-prop13" checked onchange="calculateSimulator()" class="mt-0.5 w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-850 accent-emerald-500">
+                        <span class="text-slate-300">Real estate possesses low historical California Prop 13 tax base (\$8k/yr)</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 cursor-pointer">
+                        <input type="checkbox" id="check-growth" checked onchange="calculateSimulator()" class="mt-0.5 w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-850 accent-emerald-500">
+                        <span class="text-slate-300">Strategic partnership fleet connections scale operating margins by 15%</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: INTERACTIVE LEDGER & OUTPUT METRICS (7 Columns) -->
+        <div class="lg:col-span-7 space-y-6">
+            
+            <!-- Output KPI Block: The Ultimate Post-Tax take-Home comparison -->
+            <div class="bg-gradient-to-tr from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-16 -bottom-16 w-36 h-36 bg-emerald-500/5 rounded-full blur-xl"></div>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <span class="text-[9px] font-mono font-extrabold uppercase bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">Core Venture Value</span>
+                        <h2 class="text-lg font-bold text-white font-display mt-1">The Partner-Hybrid Post-Tax Leverage</h2>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-slate-500 block uppercase font-mono">Retained Net Yield</span>
+                        <span id="yield-comparison-badge" class="text-sm bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 font-bold">$76,700/yr take-home</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-850 space-y-1">
+                        <span class="text-[9px] font-mono text-slate-500 uppercase block font-extrabold">Son's Handshake Hours</span>
+                        <span class="text-xl font-extrabold text-white">3 Hours <span class="text-xs text-slate-400 font-medium">/ week</span></span>
+                        <p class="text-[10px] text-slate-400 leading-tight">Drop your workload from 55 hrs/wk</p>
+                    </div>
+                    <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-850 space-y-1">
+                        <span class="text-[9px] font-mono text-slate-500 uppercase block font-extrabold">Son's Effective Hourly Wage</span>
+                        <span id="label-hybrid-wage" class="text-xl font-extrabold text-emerald-400">$557.24 <span class="text-xs text-emerald-500 font-medium">/ hour</span></span>
+                        <p class="text-[10px] text-slate-400 leading-tight">Massive executive-level returns</p>
+                    </div>
+                </div>
+
+                <!-- Explanatory ROI Note Card -->
+                <div class="mt-4 bg-emerald-500/5 p-4 rounded-xl border border-emerald-500/20 text-xs text-slate-300 leading-relaxed flex items-start gap-2.5">
+                    <i class="fa-solid fa-lightbulb text-emerald-400 mt-0.5"></i>
+                    <span id="label-leverage-analysis-pitch">
+                        Arthur Jr., by choosing our **Partner-Hybrid Model**, you trade away only **$1,547/year** in physical cash compared to hiring an expensive manager, but you reclaim **1,100 hours of personal life per year** while dropping your workload to 3 hours of high-level board oversight.
+                    </span>
+                </div>
+            </div>
+
+            <!-- THE MASTER SCENARIO LEDGER BOARD -->
+            <div class="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-xl space-y-4">
+                <div class="border-b border-slate-800 pb-3">
+                    <h3 class="text-sm font-bold text-white font-display">Succession Comparison Ledger</h3>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Observe how payouts, taxes, legal protections, and hour metrics adjust programmatically based on your configuration inputs.</p>
+                </div>
+
+                <!-- Ledger Columns (Fully Responsive UI) -->
+                <div class="space-y-3">
+                    
+                    <!-- Scenario 1: Solo Grind -->
+                    <div class="bg-slate-950 border border-slate-900 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:border-slate-800 transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scenario 1: Solo Grind</h4>
+                            </div>
+                            <p class="text-[11px] text-slate-400">Son manages 100% of operations on top of high-paying corporate day job.</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-right sm:text-right w-full sm:w-auto border-t sm:border-0 border-slate-900 pt-2 sm:pt-0">
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase block">Weekly Time</span>
+                                <span class="text-xs font-bold text-white">55 hrs/wk</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase block">CA & Fed Tax</span>
+                                <span id="ledger-s1-tax" class="text-xs font-bold text-rose-400">-$94,906</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-emerald-400 uppercase block font-bold">Post-Tax Cash</span>
+                                <span id="ledger-s1-net" class="text-xs font-extrabold text-emerald-400">$130,094</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 1.5: Private Manager -->
+                    <div class="bg-slate-950 border border-slate-900 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:border-slate-800 transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scenario 1.5: Private Manager</h4>
+                            </div>
+                            <p class="text-[11px] text-slate-400">Hires service manager privately for \$90k loaded. Handles employee oversight.</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-right sm:text-right w-full sm:w-auto border-t sm:border-0 border-slate-900 pt-2 sm:pt-0">
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase block">Weekly Time</span>
+                                <span class="text-xs font-bold text-white">25 hrs/wk</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase block">CA & Fed Tax</span>
+                                <span id="ledger-s15-tax" class="text-xs font-bold text-rose-400">-$56,753</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-emerald-400 uppercase block font-bold">Post-Tax Cash</span>
+                                <span id="ledger-s15-net" class="text-xs font-extrabold text-emerald-400">$78,247</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 2: Pure Passive -->
+                    <div class="bg-slate-950 border border-slate-900 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:border-slate-800 transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                                <h4 class="text-xs font-bold text-white uppercase tracking-wider">Scenario 2: Pure Passive</h4>
+                            </div>
+                            <p class="text-[11px] text-slate-400">Fixed market NNN real estate lease. Completely hands-off landlord.</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-right sm:text-right w-full sm:w-auto border-t sm:border-0 border-slate-900 pt-2 sm:pt-0">
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase block">Weekly Time</span>
+                                <span class="text-xs font-bold text-white">0 hrs/wk</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-500 uppercase block">CA & Fed Tax</span>
+                                <span id="ledger-s2-tax" class="text-xs font-bold text-rose-400">-$9,000</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-emerald-400 uppercase block font-bold">Post-Tax Cash</span>
+                                <span id="ledger-s2-net" class="text-xs font-extrabold text-emerald-400">$51,000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scenario 3: Partner Hybrid (Opis Pick) -->
+                    <div class="bg-slate-900 border border-emerald-500/30 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:border-emerald-500/50 transition">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                <h4 class="text-xs font-extrabold text-white uppercase tracking-wider">Scenario 3: Partner Hybrid (Opis Pick)</h4>
+                            </div>
+                            <p class="text-[11px] text-slate-300">Guaranteed carrying floor + dynamic profit share splits. Act as Board Chairman.</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 text-right sm:text-right w-full sm:w-auto border-t sm:border-0 border-slate-900 pt-2 sm:pt-0">
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-400 uppercase block">Weekly Time</span>
+                                <span class="text-xs font-bold text-white">3 hrs/wk</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-slate-400 uppercase block">CA & Fed Tax</span>
+                                <span id="ledger-s3-tax" class="text-xs font-bold text-rose-400">-$12,300</span>
+                            </div>
+                            <div>
+                                <span class="text-[9px] font-mono text-emerald-400 uppercase block font-bold">Post-Tax Cash</span>
+                                <span id="ledger-s3-net" class="text-xs font-extrabold text-emerald-400">$76,700</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DETAILED COMPARATIVE PARAMETERS GRID -->
+            <div class="bg-slate-900/40 border border-slate-900 rounded-3xl p-6 shadow-xl space-y-4">
+                <h3 class="text-sm font-bold text-white font-display">Platform Security & Liability Comparison</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-850 space-y-2">
+                        <h4 class="font-bold text-white flex items-center gap-1.5 text-rose-400">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Solo Grind & Private Manager Risks
+                        </h4>
+                        <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                            <li>100% Personal Legal Liability on bay slips</li>
+                            <li>W-2 mechanic workers' comp lawsuits exposure</li>
+                            <li>High risk of unmonitored employee/manager fraud</li>
+                            <li>Entity-level California S-Corp franchise tax friction</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-850 space-y-2">
+                        <h4 class="font-bold text-white flex items-center gap-1.5 text-emerald-400">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            Opis Partner-Hybrid Protections
+                        </h4>
+                        <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
+                            <li>0% Liability exposure (shielded via Operator's OpCo LLC)</li>
+                            <li>Real-time, read-only Plaid accounting checks</li>
+                            <li>UCC-1 physical property liens filed on state registries</li>
+                            <li>Depreciation pass-through shelters base rent floor to \$0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-6 px-6 mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+            <div>
+                &copy; 2026 OpisMarket.ai Inc. All rights reserved. Registered C2C Succession Exchange.
+            </div>
+            <div class="flex items-center gap-1.5 italic text-[10px]">
+                <i class="fa-solid fa-brain"></i>
+                <span>Note: Gen AI was utilized for strategic refining, structural financial derivations, and California tax modeling.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- STATE MANAGEMENT & CALCULATOR ENGINE -->
+    <script>
+        // Track outstanding mortgage state
+        let hasMortgage = true;
+
+        // Configuration modifiers
+        function setMortgageStatus(status) {
+            hasMortgage = status;
+            const btnYes = document.getElementById('btn-mortgage-yes');
+            const btnNo = document.getElementById('btn-mortgage-no');
+            const mortgageBox = document.getElementById('mortgage-payment-box');
+
+            const selectedClass = "py-2.5 text-xs font-bold rounded-lg transition-all duration-300 bg-emerald-500 text-slate-950 shadow-md";
+            const unselectedClass = "py-2.5 text-xs font-bold rounded-lg transition-all duration-300 text-slate-400 hover:text-white";
+
+            if (status) {
+                if (btnYes) btnYes.className = selectedClass;
+                if (btnNo) btnNo.className = unselectedClass;
+                if (mortgageBox) mortgageBox.style.display = 'block';
+            } else {
+                if (btnNo) btnNo.className = selectedClass;
+                if (btnYes) btnYes.className = unselectedClass;
+                if (mortgageBox) mortgageBox.style.display = 'none';
+            }
+
+            calculateSimulator();
+        }
+
+        // Programmatic financial engine
+        function calculateSimulator() {
+            // Inputs
+            const grossSales = parseFloat(document.getElementById('input-gross-sales').value);
+            const ebitdaPct = parseFloat(document.getElementById('input-ebitda-pct').value);
+            const propValue = parseFloat(document.getElementById('input-prop-value').value);
+            const mortgagePI = hasMortgage ? parseFloat(document.getElementById('input-mortgage-payment').value) : 0;
+            const profitSharePct = parseFloat(document.getElementById('input-profit-share').value);
+
+            // Modifier checkboxes
+            const checkProp13 = document.getElementById('check-prop13').checked;
+            const checkGrowth = document.getElementById('check-growth').checked;
+
+            // Raw dynamic calculations
+            const baseEbitda = grossSales * (ebitdaPct / 100);
+            const strategicEbitda = checkGrowth ? baseEbitda * 1.15 : baseEbitda;
+
+            // Sync Slider Labels
+            document.getElementById('label-gross-sales').innerText = '$' + grossSales.toLocaleString();
+            document.getElementById('label-ebitda-pct').innerText = ebitdaPct + '%';
+            document.getElementById('label-ebitda-val').innerText = '$' + Math.round(baseEbitda).toLocaleString();
+            document.getElementById('label-prop-value').innerText = '$' + propValue.toLocaleString();
+            document.getElementById('label-profit-share').innerText = profitSharePct + '%';
+            if (hasMortgage) {
+                document.getElementById('label-mortgage-payment').innerText = '$' + mortgagePI.toLocaleString() + '/mo';
+            }
+
+            // Real Estate Carrying Cost Expenses (Taxes + Insurance)
+            // Under CA Prop 13, historical base is typically lower. Standard base is 1.1% reassessed; Prop 13 base is ~0.67% of old purchase.
+            const propTaxes = checkProp13 ? 8000 : (propValue * 0.011);
+            const structuralInsurance = 4000;
+            const totalHoldingCashExpenses = propTaxes + structuralInsurance;
+
+            // Real Estate Paper Depreciation Deductions (AssetCo)
+            const buildingValue = propValue * 0.80; // Standard building-to-land ratio
+            const buildingStraightLineDepreciation = buildingValue / 39;
+            const equipmentDepreciation = 5500;
+            const totalDepreciationShield = buildingStraightLineDepreciation + equipmentDepreciation;
+
+            // SCENARIO 1: Solo Grind
+            const s1Gross = baseEbitda;
+            const s1CaFranchiseFee = s1Gross * 0.015; // CA S-Corp 1.5%
+            const s1TaxableBase = Math.max(0, s1Gross - s1CaFranchiseFee);
+            const s1IncomeTax = s1TaxableBase * 0.413; // 41.3% blended active day-job marginal rate
+            const s1TotalTax = s1CaFranchiseFee + s1IncomeTax;
+            const s1NetCash = s1Gross - s1TotalTax;
+            const s1HourlyWage = s1NetCash / 2750;
+
+            // SCENARIO 1.5: Private Manager
+            const loadedManagerCost = 90000;
+            const s15Gross = Math.max(0, baseEbitda - loadedManagerCost);
+            
+            // CA S-Corp Franchise Tax + California LLC fee brackets dynamically derived from the grossSales slider inputs
+            let calculatedS15LLCFee = 800;
+            if (s15Gross > 0) {
+                if (grossSales >= 250000 && grossSales < 500000) calculatedS15LLCFee += 900;
+                else if (grossSales >= 500000 && grossSales < 1000000) calculatedS15LLCFee += 2500;
+                else if (grossSales >= 1000000 && grossSales < 5000000) calculatedS15LLCFee += 6000;
+                else if (grossSales >= 5000000) calculatedS15LLCFee += 11790;
+            }
+            const s15LLCFees = calculatedS15LLCFee;
+            const s15TaxableBase = Math.max(0, s15Gross - s15LLCFees);
+            const s15IncomeTax = s15TaxableBase * 0.413; // High active bracket
+            const s15TotalTax = s15LLCFees + s15IncomeTax;
+            const s15NetCash = s15Gross - s15TotalTax;
+            const s15HourlyWage = s15NetCash / 1250;
+
+            // SCENARIO 2: Pure Passive
+            // Real Estate NNN rental rates are generally structured as 6% of Property Value
+            const s2Gross = propValue * 0.06;
+            const s2TaxableBase = Math.max(0, s2Gross - totalHoldingCashExpenses - totalDepreciationShield);
+            const s2IncomeTax = s2TaxableBase * 0.30; // 30% blended passive rate (not active SE)
+            const s2TotalTax = s2IncomeTax; // No LLC operational fees under passive real estate holding
+            const s2NetCash = s2Gross - totalHoldingCashExpenses - s2TotalTax;
+
+            // SCENARIO 3: Partner Hybrid
+            // Derive base floor dynamically
+            let baseFloorMonthly = 0;
+            if (hasMortgage) {
+                // Cash-neutral mortgage payment + taxes/insurance
+                baseFloorMonthly = mortgagePI + (totalHoldingCashExpenses / 12);
+            } else {
+                // Opportunity Cost of Equity (4% of real estate value annually) + taxes/insurance
+                baseFloorMonthly = ((propValue * 0.04) / 12) + (totalHoldingCashExpenses / 12);
+            }
+            const s3BaseFloorAnnual = baseFloorMonthly * 12;
+
+            // Strategic Performance Profit Share % of EBITDA surplus
+            const s3EbitdaSurplus = Math.max(0, strategicEbitda - s3BaseFloorAnnual);
+            const s3SonProfitShareAnnual = s3EbitdaSurplus * (profitSharePct / 100);
+            const s3GrossPayout = s3BaseFloorAnnual + s3SonProfitShareAnnual;
+
+            // Tax shielding of Hybrid Structure
+            // Base floor is covered under AssetCo depreciation shield. Profit share is passive K-1 distribution (30% rate)
+            const s3RentFloorTaxableBase = Math.max(0, s3BaseFloorAnnual - totalHoldingCashExpenses - totalDepreciationShield);
+            const s3RentFloorTax = s3RentFloorTaxableBase * 0.30;
+            const s3ProfitShareTax = s3SonProfitShareAnnual * 0.30;
+            const s3TotalTax = s3RentFloorTax + s3ProfitShareTax;
+            const s3NetCash = s3GrossPayout - totalHoldingCashExpenses - s3TotalTax;
+            const s3HourlyWage = s3NetCash / 150; // 3 hours/week * 50 weeks
+
+            // Sync Comparative Ledger UI Elements
+            document.getElementById('ledger-s1-tax').innerText = '-$' + Math.round(s1TotalTax).toLocaleString();
+            document.getElementById('ledger-s1-net').innerText = '$' + Math.round(s1NetCash).toLocaleString();
+
+            document.getElementById('ledger-s15-tax').innerText = '-$' + Math.round(s15TotalTax).toLocaleString();
+            document.getElementById('ledger-s15-net').innerText = '$' + Math.round(s15NetCash).toLocaleString();
+
+            document.getElementById('ledger-s2-tax').innerText = '-$' + Math.round(s2TotalTax).toLocaleString();
+            document.getElementById('ledger-s2-net').innerText = '$' + Math.round(s2NetCash).toLocaleString();
+
+            document.getElementById('ledger-s3-tax').innerText = '-$' + Math.round(s3TotalTax).toLocaleString();
+            document.getElementById('ledger-s3-net').innerText = '$' + Math.round(s3NetCash).toLocaleString();
+
+            // Sync Header KPI Block
+            document.getElementById('yield-comparison-badge').innerText = '$' + Math.round(s3NetCash).toLocaleString() + '/yr take-home';
+            document.getElementById('label-hybrid-wage').innerText = '$' + s3HourlyWage.toFixed(2) + ' / hour';
+
+            // Sync Explanatory ROI Note Card
+            const cashDifference = s15NetCash - s3NetCash;
+            const reclaimHoursStr = "1,100 hours";
+            document.getElementById('label-leverage-analysis-pitch').innerHTML = `
+                Arthur Jr., by choosing our **Partner-Hybrid Model ($${Math.round(s3NetCash/1000)}k take-home)**, you trade away only **$${Math.round(Math.abs(cashDifference)).toLocaleString()}/year** in physical cash compared to hiring an expensive manager privately ($${Math.round(s15NetCash/1000)}k take-home), but you reclaim **1,100 hours of personal life per year** while dropping your workload from 25 hours to only 3 hours. Your effective advisory rate is a massive **$${s3HourlyWage.toFixed(2)}/hour**!
+            `;
+        }
+
+        // Initialize calculations on load
+        window.onload = function() {
+            setMortgageStatus(true);
+        }
+    </script>
+</body>
+</html>
